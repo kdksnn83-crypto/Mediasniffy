@@ -32,9 +32,7 @@ func _ready() -> void:
 	camera.current = true
 	weapon = Node3D.new()
 	camera.add_child(weapon)
-	mission.box(weapon, Vector3(0.19, -0.20, -0.48), Vector3(0.09, 0.12, 0.65), Color(0.25, 0.15, 0.08))
-	mission.box(weapon, Vector3(0.19, -0.16, -0.88), Vector3(0.035, 0.035, 0.52), Color(0.15, 0.17, 0.18))
-	mission.box(weapon, Vector3(0.19, -0.13, -0.72), Vector3(0.035, 0.035, 0.03), Color(0.08, 0.09, 0.1))
+	mission.models.spawn("Rifle", weapon, Vector3(0.19, -0.20, -0.45))
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	shot_sound = AudioStreamPlayer.new()
 	shot_sound.playback_type = AudioServer.PLAYBACK_TYPE_STREAM
@@ -59,6 +57,8 @@ func _unhandled_input(event: InputEvent) -> void:
 		mission.ballistics.adjust_zero(100)
 	if event.is_action_pressed("zero_down"):
 		mission.ballistics.adjust_zero(-100)
+	if event.is_action_pressed("shadows"):
+		mission.toggle_shadows()
 	if event.is_action_pressed("grenade"):
 		mission.destruction.throw_grenade()
 	if event.is_action_pressed("squad"):
@@ -78,6 +78,7 @@ func _physics_process(delta: float) -> void:
 		return
 	aiming = Input.is_action_pressed("aim")
 	camera.fov = lerpf(camera.fov, 45.0 if aiming else 75.0, minf(delta * 12, 1))
+	weapon.position.y = lerpf(weapon.position.y, 0.113 if aiming else 0.0, minf(delta * 12, 1))
 	weapon.position.x = lerpf(weapon.position.x, -0.19 if aiming else 0.0, minf(delta * 12, 1))
 	var crouch := Input.is_action_pressed("crouch")
 	camera.position.y = lerpf(camera.position.y, 1.0 if crouch else 1.6, minf(delta * 10, 1))

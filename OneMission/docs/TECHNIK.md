@@ -1,7 +1,7 @@
-# One Mission: Nasser Stahl – Prototyp 0.3
+# One Mission: Nasser Stahl – Prototyp 0.4
 
-Eigenständiger Einzelspieler-Prototyp. Alle Geometrie, Materialien und Geräusche
-werden im Projekt erzeugt. Keine kopierten Arma-Assets, externen Bibliotheken,
+Eigenständiger Einzelspieler-Prototyp. Modelle, Texturen und Geräusche stammen aus eigener
+Erzeugung. GLB-Modelle sind im Projekt eingebettet; die Welt wird im Code aufgebaut. Keine kopierten Arma-Assets, externen Bibliotheken,
 Plugins oder kostenpflichtigen Ressourcen.
 
 ## Implementiert
@@ -168,6 +168,61 @@ Das Projekt hat weiterhin keinen Mehrspielerbetrieb und keinen Server.
 Diese Einschränkungen halten den Prototyp klein und entsprechen dem gewählten
 Compatibility-Renderer; die Bildrate auf dem Windows-Ziel-PC bleibt zu prüfen.
 
+## Modelle – Erweiterung 0.4
+
+`assets/models/nasser_stahl.glb` enthält 13 eigene Modellgruppen:
+WallPanel, HutRoof, Window, Lantern, Pine_A, Pine_B, Rifle, Splinter,
+MetalShard, Crate, Soldier, Locomotive und Wagon. Keine Modelle oder Texturen
+wurden aus Arma, Battlefield oder einer externen Asset-Sammlung übernommen.
+
+Die Modelldatei enthält sechs eingebettete 256×256-Texturen und ungefähr
+15000 Dreiecke über sämtliche Modellgruppen zusammen. Die Waldinstanzen
+vervielfachen die Dreieckszahl in der Szene; diese Zahl ist kein Gesamtbudget
+für das gerenderte Bild. Modelle und Materialien werden gemeinsam geladen
+und von den Instanzen geteilt. Geometrie ist pro Modell zusammengeführt;
+mehrere Materialflächen erfordern weiterhin mehrere Zeichenaufrufe.
+Nadelbüschel verwenden Alpha-Cutout. Es gibt noch keine Distanz-LOD-Stufen.
+
+- Bretterwände besitzen schmale Fugen, Kanten und Nägel. Das unsichtbare
+  physikalische Kachelgitter bleibt bestehen, damit die bisherige Zerstörung
+  weiter funktioniert. Ein zerstörtes Feld blendet auch seine Modellteile aus.
+- Dächer sind geneigt, mit Dachstruktur, Sparren und Firstabdeckungen.
+  Das Fluchthaus bekommt ebenfalls Bretter und Dachdetails, bleibt aber stabil.
+- Fenster sind dekorative Glasflächen vor der Wand; sie sind noch keine
+  separat zerstörbare Glas- und Rahmenphysik. Dach- und Baumkollisionen bleiben
+  grobe Formen, keine exakte Kollisionskopie aller sichtbaren Details.
+- Tannen bestehen aus einem verjüngten Stamm, Ästen und texturierten
+  Nadelkarten. Äste und Nadeln haben keine eigene Treffer-/Sichtkollision.
+- Das Gewehr besitzt Holzschaft, Lauf, Laufbänder, Verschluss, Abzugsbügel und
+  einfache Visierung. Die Ansicht bewegt sich beim Zielen nach oben und zur
+  Mitte. Hände, aufwendige Nachladeanimationen und Waffenwechsel fehlen noch.
+- Soldaten haben Jacke, Stiefel, Kopf, Helm, Rucksack und Gewehr. Die Beine
+  bewegen sich über getrennte Gelenkpunkte; das ist keine vollständige
+  Animation mit Skelett, IK oder realistischen Übergängen.
+- Der Zug besitzt einen runden Kessel, Schornstein, Räder, Führerhaus und
+  beplankte Waggons. Die bisherigen massiven Kollisionsboxen bleiben erhalten;
+  die sichtbaren Räder sind keine reale Fahrwerksimulation.
+- Holztrümmer sind schmale unregelmäßige Splitter; Metalltrümmer haben eine
+  verbogene Form. Das bisherige Physik- und Lebensdauerbudget bleibt bestehen.
+
+Ein einfacher Boden-Shader ergänzt kleine Farb- und Körnungsunterschiede.
+Der Himmel liefert eine kleine Umgebungsreflexion für nasse Materialien.
+Schatten sind auf 60 m und eine 1024er Richtungslicht-Shadowmap begrenzt.
+F8 schaltet sie während des Spiels ab bzw. wieder an. Diese Einstellungen
+sind keine garantierte Bildrate auf dem Windows-PC.
+
+Modelle wurden in Blender 4.3.2 aus `tools/build_models.py` erzeugt.
+Blender ist nur für die Neuerzeugung nötig; Godot lädt die fertige GLB-Datei.
+Neuerzeugung im Projektordner:
+
+```
+blender --background --python-exit-code 1 --python tools/build_models.py
+```
+
+Danach das Projekt erneut in Godot importieren. Die Modelle sind eine eigene
+frühe Low-Poly-Art-Version; fotorealistische Texturen und aufwendig animierte
+Figuren werden damit nicht behauptet.
+
 ## Aufbau
 
 `project.godot`: Compatibility-Renderer und Hauptszene.
@@ -193,8 +248,8 @@ beim ersten Import erzeugt. Er gehört nicht zum Lieferumfang.
 In dieser Cloud wurde Godot 4.6.3 unter Linux verwendet. Die eingegebene
 Windows-Version 4.7.2 und die Leistung auf i5 / 20 GB RAM / 2 GB VRAM wurden
 nicht geprüft. Das Projekt verwendet den Compatibility-Renderer, einfache
-Geometrie, 420 Regentropfen in einem MultiMesh, begrenzte Sichtweite und keine
-Echtzeit-Schatten. Diese Entscheidungen reduzieren den Aufwand; eine
+Geometrie, 420 Regentropfen in einem MultiMesh, begrenzte Sichtweite und
+abschaltbare Schatten in der Nähe. Diese Entscheidungen reduzieren den Aufwand; eine
 konkrete Bildrate auf deinem PC ist damit noch nicht belegt.
 
 Grafische Startansicht und Feldkarte wurden mit einem virtuellen Bildschirm
@@ -220,15 +275,18 @@ Im Projektordner, mit Godot im PATH (unter Windows alternativ den vollständigen
 Pfad zur Godot-EXE verwenden):
 
 ```
+godot --headless --editor --import --path . --quit
 godot --headless --path . --script res://tests/smoke.gd
 godot --headless --path . --script res://tests/ballistics_materials.gd
 godot --headless --path . --script res://tests/destruction_weather.gd
+godot --headless --path . --script res://tests/models.gd
 godot --path . --script res://tests/player_controls.gd
 godot --path . --script res://tests/capture.gd -- AUSGABEORDNER
 ```
 
 22 Missionsprüfungen, 29 Ballistik-/Materialprüfungen, 33 Zerstörungs-/
-Wetterprüfungen und 12 grafische Eingabeprüfungen (96 insgesamt). Der
+Wetterprüfungen, 12 Modellprüfungen und 12 grafische Eingabeprüfungen
+(108 insgesamt). Der
 Eingabetest benötigt einen Bildschirm und führt echte Physikschritte aus.
 Die Smoke-Suite überprüft Projektile gegen Deckung und Gegner, die reale
 Truppüberquerung, Sicherheitsbedingungen, beide Zugzielvarianten,

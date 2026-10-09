@@ -14,3 +14,4 @@ window/stretch/mode="canvas_items"
 renderer/rendering_method="gl_compatibility"
 renderer/rendering_method.mobile="gl_compatibility"
 environment/defaults/default_clear_color=Color(0.12,0.16,0.19,1)
+lights_and_shadows/directional_shadow/size=1024

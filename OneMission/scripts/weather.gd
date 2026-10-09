@@ -1,4 +1,6 @@
 extends Node3D
+const GroundShader = preload("res://shaders/ground.gdshader")
+var ground_material: ShaderMaterial
 const RiverShader = preload("res://shaders/river.gdshader")
 const PuddleShader = preload("res://shaders/puddle.gdshader")
 var mission: Node3D
@@ -30,6 +32,8 @@ func set_wetness(value: float) -> void:
 	wetness = clampf(value, 0, 1)
 	for entry in registered:
 		apply_wetness(entry)
+	if ground_material != null:
+		ground_material.set_shader_parameter("wetness", wetness)
 	for puddle in puddles:
 		puddle.material_override.set_shader_parameter("wetness", wetness)
 
@@ -87,3 +91,10 @@ func _process(delta: float) -> void:
 	if is_instance_valid(mission.player) and is_instance_valid(mission.rain_audio):
 		var volume := -10.0 if sheltered(mission.player.camera.global_position) else 0.0
 		mission.rain_audio.volume_db = lerpf(mission.rain_audio.volume_db, volume, minf(1, delta * 3))
+
+func terrain_material() -> ShaderMaterial:
+	if ground_material == null:
+		ground_material = ShaderMaterial.new()
+		ground_material.shader = GroundShader
+		ground_material.set_shader_parameter("wetness", wetness)
+	return ground_material

@@ -1,4 +1,4 @@
-ONE MISSION: NASSER STAHL — Prototyp 0.3
+ONE MISSION: NASSER STAHL — Prototyp 0.4
 
 SO STARTET DAS SPIEL UNTER WINDOWS
 1. ZIP vollständig entpacken (nicht direkt aus dem ZIP starten).
@@ -27,6 +27,7 @@ Tab halten     Feldkarte (Norden oben)
 Bild auf / ab  Visierentfernung 100 bis 400 Meter
 Esc            Maus freigeben / einfangen (keine Spielpause)
 F5             Mission neu starten
+F8             Schatten ein-/ausschalten (Leistung)
 
 DEIN AUFTRAG
 An beiden orange markierten Stellen der Brücke je 3 Sekunden E halten.
@@ -48,7 +49,7 @@ Streifende Treffer können von Stahl abprallen. Zielen und Ducken reduzieren die
 Bei längeren Entfernungen Visier anpassen; Geschosse brauchen Flugzeit.
 Fehlt ein Kamerad am Zündpunkt: F auf „Folgen“ stellen und zurückblicken.
 
-Grafik, Sounds und Figuren sind einfache, selbst erzeugte Platzhalter.
+Eigene texturierte Low-Poly-Modelle sind enthalten. Sounds bleiben Platzhalter.
 Die vollständigen technischen Hinweise stehen in docs/TECHNIK.md.
 
 NEU IN VERSION 0.3
@@ -61,3 +62,13 @@ Wände vermindern Explosionsschaden, machen dich aber nicht unverwundbar.
 Trümmer werden nach 4 Sekunden entfernt; höchstens 48 Stück gleichzeitig.
 Nasse Oberflächen, Pfützenringe und kleine Flusswellen sind ergänzt.
 Die Wasseroberfläche ist Grafik; tiefes Wasser bleibt tödlich.
+
+NEU IN VERSION 0.4 — MODELLE
+Eigene eingebettete GLB-Modelle ersetzen die wichtigsten Platzhalter:
+Bretterwände mit Nägeln, Schrägdächer, Fensterrahmen und Laternen,
+verzweigte Tannen, Gewehr, Soldaten, Lokomotive, Waggons und Kisten.
+Trümmer sind nun schmale Holzsplitter und verbogene Metallstücke.
+Wandkollision, Ballistik und Missionsregeln bleiben separate Spiellogik.
+Schatten reichen 60 m weit. Mit F8 kannst du sie bei niedriger Bildrate abschalten.
+Blender ist zum Spielen NICHT erforderlich. Der erste Godot-Import der
+GLB-Datei kann etwas dauern. Das ist weiterhin eine frühe Modellversion.

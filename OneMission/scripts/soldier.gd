@@ -9,6 +9,9 @@ var memory := 0.0
 var cooldown := 0.0
 var patrol_clock := 0.0
 var alive := true
+var visual: Node3D
+var left_leg: Node3D
+var right_leg: Node3D
 
 func _ready() -> void:
 	mission = get_parent()
@@ -22,9 +25,10 @@ func _ready() -> void:
 	collision.shape = shape
 	collision.position.y = 0.85
 	add_child(collision)
-	mission.box(self, Vector3(0, 0.85, 0), Vector3(0.48, 1.1, 0.3), Color(0.25, 0.34, 0.22) if friendly else Color(0.35, 0.36, 0.39))
-	mission.box(self, Vector3(0, 1.5, 0), Vector3(0.32, 0.3, 0.32), Color(0.42, 0.38, 0.28))
-	mission.box(self, Vector3(0.28, 1.0, -0.28), Vector3(0.055, 0.07, 0.7), Color(0.16, 0.17, 0.17))
+	visual = mission.models.spawn("Soldier", self)
+	mission.models.apply_uniform(visual, friendly)
+	left_leg = visual.find_child("LegLeft", true, false)
+	right_leg = visual.find_child("LegRight", true, false)
 
 func visible(target: Node3D) -> bool:
 	if global_position.distance_to(target.global_position) > 52:
@@ -108,6 +112,10 @@ func _physics_process(delta: float) -> void:
 	else:
 		velocity.y = 0
 	move_and_slide()
+	if is_instance_valid(left_leg) and is_instance_valid(right_leg):
+		var gait := sin(patrol_clock * 8) * 0.28 if Vector2(velocity.x, velocity.z).length() > 0.1 else 0.0
+		left_leg.rotation.x = gait
+		right_leg.rotation.x = -gait
 	if global_position.y < -4:
 		take_damage(100)
 

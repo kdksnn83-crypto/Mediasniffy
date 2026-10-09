@@ -37,7 +37,7 @@ func spawn_fragment(point: Vector3, size: Vector3, impulse: Vector3, kind: Strin
 	body.can_sleep = true
 	add_child(body)
 	body.global_position = point
-	mission.box(body, Vector3.ZERO, size, Color(0.21, 0.24, 0.25) if kind == "steel" else Color(0.28, 0.22, 0.16))
+	mission.models.spawn("MetalShard" if kind == "steel" else "Splinter", body, Vector3.ZERO, Vector3(size.x, size.y / (0.42 if kind == "steel" else 1.0), size.z / (1.0 if kind == "steel" else 0.7)))
 	var shape := CollisionShape3D.new()
 	var box := BoxShape3D.new()
 	box.size = size
@@ -50,7 +50,7 @@ func spawn_fragment(point: Vector3, size: Vector3, impulse: Vector3, kind: Strin
 
 func break_tile(tile: StaticBody3D) -> void:
 	for i in range(3):
-		spawn_fragment(tile.global_position + Vector3((i - 1) * 0.2, 0.1, 0), Vector3(0.18, 0.28, 0.08), Vector3((i - 1) * 2, 2.5, 0.8))
+		spawn_fragment(tile.global_position + Vector3((i - 1) * 0.2, 0.1, 0), Vector3(0.06, 0.45, 0.035), Vector3((i - 1) * 2, 2.5, 0.8))
 	# Attach edge splinters to surviving neighboring panels. When a neighbor
 	# disappears its splinters disappear too; no floating edges remain.
 	for side in [-1, 1]:
@@ -58,7 +58,7 @@ func break_tile(tile: StaticBody3D) -> void:
 		for neighbor in tile.building.tiles:
 			if neighbor.destroyed or neighbor.global_position.distance_to(edge_neighbor) > 0.02:
 				continue
-			var splinter: Node3D = mission.box(neighbor, Vector3(-side * 0.48, 0, 0), Vector3(0.08, 0.28, 0.12), Color(0.48, 0.36, 0.2))
+			var splinter: Node3D = mission.models.spawn("Splinter", neighbor, Vector3(-side * 0.48, 0, 0), Vector3(0.04, 0.24, 0.035))
 			splinter.rotation.z = side * 0.28
 			break
 

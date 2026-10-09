@@ -1,0 +1,34 @@
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+PASS: Mach 1 curve knot preserved
+PASS: Cd interpolated between transonic knots
+PASS: curve endpoint clamping
+PASS: stationary round has no aerodynamic drag
+PASS: drag opposes air-relative velocity
+PASS: drag acceleration uses mass and area with SI units
+PASS: muzzle kinetic energy in joules
+PASS: normal-incidence wooden wall can be penetrated
+PASS: penetration conserves energy minus resistance work
+PASS: calibrated 5 mm steel stops reference round
+PASS: grazing steel impact reflects away from surface
+PASS: ricochet preserves 40 percent speed, 16 percent energy
+PASS: zero-speed impact is safe
+PASS: invalid mass fails closed
+PASS: embedded hit with no normal fails closed
+PASS: unclassified material remains solid cover
+PASS: configured dispersion maps to diameter at range
+PASS: RK2 integration converges under timestep refinement
+PASS: box exit measures actual thickness
+PASS: oblique path accounts for increased material thickness
+PASS: exit solver respects transformed geometry
+PASS: scaled collision gives world-space path length
+PASS: wood penetration damages guard with reduced energy
+PASS: thick steel collision blocks projectile in real world
+PASS: thin second obstacle is checked after first penetration in same tick
+PASS: embedded obstacle cannot be skipped inside penetrable material
+PASS: real physics ricochet survives without re-hitting same surface
+PASS: thick medium consumes multiple ticks instead of teleporting to exit
+PASS: projectile eventually exits thick medium with reduced energy
+RESULT: 29 checks, 0 failures
+WARNING: ObjectDB instances leaked at exit (run with --verbose for details).
+   at: cleanup (core/object/object.cpp:2663)

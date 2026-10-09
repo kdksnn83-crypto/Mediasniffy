@@ -12,6 +12,10 @@ func run() -> void:
 	DirAccess.make_dir_recursive_absolute(output)
 	var mission = load("res://Mission.tscn").instantiate()
 	root.add_child(mission)
+	# Art inspection view hides HUD without changing the actual game defaults.
+	for control in mission.label.get_parent().get_children():
+		if control is Control:
+			control.hide()
 	for actor in mission.enemies + mission.squad + [mission.player]:
 		actor.set_physics_process(false)
 	mission.player.position = Vector3(17, 0.1, 11)
@@ -30,6 +34,11 @@ func run() -> void:
 	var puddle: MeshInstance3D = mission.weather.puddles[0]
 	mission.player.camera.look_at(puddle.global_position)
 	await photograph(output + "/Pfuetzen-Regen.png")
+	mission.train_clock = 40
+	mission.update_train(0)
+	mission.player.position = Vector3(7, 0.1, -20)
+	mission.player.camera.look_at(Vector3(0, 1.4, -29))
+	await photograph(output + "/Zug-Modelle.png")
 	mission.queue_free()
 	await process_frame
 	quit()

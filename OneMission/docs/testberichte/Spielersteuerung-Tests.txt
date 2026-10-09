@@ -1,0 +1,18 @@
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+WARNING: Could not set V-Sync mode, as changing V-Sync mode is not supported by the graphics driver.
+     at: set_use_vsync (platform/linuxbsd/x11/gl_manager_x11.cpp:364)
+OpenGL API 4.5 (Core Profile) Mesa 25.0.7-2+deb13u1 - Compatibility - Using Device: Mesa - llvmpipe (LLVM 19.1.7, 256 bits)
+
+PASS: graphical mouse capture enables actual player simulation
+PASS: W + Shift moves FPS body across solid ground
+PASS: sprint consumes stamina
+PASS: crouch lowers collision capsule
+PASS: RMB narrows field of view
+PASS: trigger fires projectile and consumes cartridge
+PASS: R starts timed reload
+PASS: reload draws cartridge from reserve
+PASS: E interaction completes timed charge placement
+PASS: squad order toggles hold
+PASS: G input consumes one grenade
+PASS: G input launches a physical grenade
+RESULT: 12 checks, 0 failures

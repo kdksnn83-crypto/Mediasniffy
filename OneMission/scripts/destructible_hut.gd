@@ -18,6 +18,8 @@ func build(origin: Vector3) -> void:
 	wall(Vector3(-2, 0, -2.5), 2, 0)
 	wall(Vector3(2, 0, -2.5), 2, 0)
 	roof = mission.box(self, Vector3(0, 3.3, 0), Vector3(6.5, 0.3, 5.5), Color(0.2, 0.23, 0.24), true, "wood")
+	roof.get_child(0).hide()
+	mission.models.spawn("HutRoof", roof)
 	mission.weather.register_roof(roof, Vector2(3.25, 2.75))
 
 func wall(center: Vector3, width: int, angle: float) -> void:
@@ -36,7 +38,9 @@ func wall(center: Vector3, width: int, angle: float) -> void:
 			tile.position = center + local_offset
 			tile.rotation.y = angle
 			add_child(tile)
-			mission.box(tile, Vector3.ZERO, tile.tile_size, Color(0.32 + row * 0.012, 0.25, 0.19), false, "wood")
+			mission.models.spawn("WallPanel", tile)
+			if row == 1 and width == 5 and column in [1, 3]:
+				mission.models.spawn("Window", tile, Vector3(0, 0, 0.13 if center.x > 0 else -0.13))
 			var collision := CollisionShape3D.new()
 			var bounds := BoxShape3D.new()
 			bounds.size = tile.tile_size
@@ -87,6 +91,6 @@ func finish_collapse() -> void:
 			tile.apply_blast_damage(tile.health)
 	# Prepared resting rubble: cosmetic so it does not trap the player or squad.
 	for i in range(7):
-		var rubble: Node3D = mission.box(self, Vector3((i - 3) * 0.7, 0.15, 0), Vector3(0.65, 0.18, 4.5), Color(0.17, 0.2, 0.21))
+		var rubble: Node3D = mission.models.spawn("MetalShard", self, Vector3((i - 3) * 0.7, 0.15, 0), Vector3(0.65, 0.3, 4.5))
 		rubble.rotation.y = (i % 3 - 1) * 0.08
 		mission.destruction.spawn_fragment(global_position + Vector3((i - 3) * 0.5, 1, 0), Vector3(0.5, 0.12, 0.8), Vector3((i - 3) * 0.4, 2, 1))

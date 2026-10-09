@@ -1,0 +1,38 @@
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+PASS: guard hut has 60 independently colliding tiles and 20 supports
+PASS: intact wall tile blocks actual ray
+PASS: first real projectile deposits energy without erasing wall
+PASS: second projectile creates visible and physical opening
+PASS: destroyed tile leaves no invisible bullet collision
+PASS: destroyed tile spawns physical wood fragments
+PASS: non-support tile damage cannot collapse roof
+PASS: lost foundation removes unsupported panels above it
+PASS: roof remains standing below support loss threshold
+PASS: 45 percent support loss triggers collapse and clears overhead collision
+PASS: repeated damage cannot count support twice
+PASS: prepared roof animation completes into resting wreckage
+PASS: debris count stays within shared budget
+PASS: fragments have mass and world collision without blocking characters
+PASS: blast falloff stops at configured radius
+PASS: blast damage declines with range
+PASS: zero-radius blast is safe
+PASS: solid cover attenuates blast damage to character
+PASS: unshielded character receives stronger blast at same range
+PASS: cover is snapshotted before same explosion opens wall
+PASS: global wetness reduces exterior roughness
+PASS: wetness clamps to valid range
+PASS: bounded puddle set and animated river are present
+PASS: partisan roof blocks rain beneath it
+PASS: collapsed guard roof no longer blocks rain
+PASS: throw consumes grenade and sets three-second fuse
+PASS: grenade fuse triggers actual area damage once
+PASS: detonated grenade cannot explode twice
+PASS: empty grenade supply blocks throwing
+PASS: debris expires from manager after lifetime
+PASS: expired debris body is freed from world
+PASS: invalid explosion produces no effects
+PASS: fatal blast reports squad losses after applying all actor damage
+RESULT: 33 checks, 0 failures
+WARNING: ObjectDB instances leaked at exit (run with --verbose for details).
+   at: cleanup (core/object/object.cpp:2663)

@@ -1,4 +1,7 @@
 extends Node3D
+const ModelLibraryScript = preload("res://scripts/model_library.gd")
+var models: Node3D
+var sunlight: DirectionalLight3D
 const DestructionScript = preload("res://scripts/destruction.gd")
 const WeatherScript = preload("res://scripts/weather.gd")
 var destruction: Node3D
@@ -60,6 +63,8 @@ func box(parent: Node, pos: Vector3, size: Vector3, color: Color, solid: bool = 
 			weather.register_material(mat, ballistic_material)
 		terrain_materials[key] = mat
 	mesh.material_override = terrain_materials[key]
+	if ballistic_material == "earth" and is_instance_valid(weather):
+		mesh.material_override = weather.terrain_material()
 	root.add_child(mesh)
 	if solid:
 		root.set_meta("ballistic_material", ballistic_material)
@@ -98,6 +103,7 @@ func _ready() -> void:
 	bind_action("pause", [KEY_ESCAPE])
 	bind_action("restart", [KEY_F5])
 	bind_action("map", [KEY_TAB])
+	bind_action("shadows", [KEY_F8])
 	bind_action("zero_up", [KEY_PAGEUP])
 	bind_action("zero_down", [KEY_PAGEDOWN])
 	bind_action("fire", [], MOUSE_BUTTON_LEFT)
@@ -106,6 +112,8 @@ func _ready() -> void:
 	add_child(destruction)
 	weather = WeatherScript.new()
 	add_child(weather)
+	models = ModelLibraryScript.new()
+	add_child(models)
 	build_world()
 	ballistics = BallisticsScript.new()
 	add_child(ballistics)
@@ -138,7 +146,16 @@ func spawn_enemy(point: Vector3) -> void:
 func build_world() -> void:
 	var world := WorldEnvironment.new()
 	var env := Environment.new()
-	env.background_mode = Environment.BG_COLOR
+	env.background_mode = Environment.BG_SKY
+	var sky := Sky.new()
+	sky.radiance_size = Sky.RADIANCE_SIZE_64
+	var atmosphere := ProceduralSkyMaterial.new()
+	atmosphere.sky_top_color = Color(0.15, 0.22, 0.27)
+	atmosphere.sky_horizon_color = Color(0.34, 0.4, 0.43)
+	atmosphere.ground_bottom_color = Color(0.12, 0.15, 0.14)
+	atmosphere.ground_horizon_color = Color(0.3, 0.34, 0.34)
+	sky.sky_material = atmosphere
+	env.sky = sky
 	env.background_color = Color(0.22, 0.28, 0.31)
 	env.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
 	env.ambient_light_color = Color(0.53, 0.62, 0.67)
@@ -152,7 +169,10 @@ func build_world() -> void:
 	sun.rotation_degrees = Vector3(-48, -30, 0)
 	sun.light_color = Color(0.65, 0.73, 0.8)
 	sun.light_energy = 0.75
-	sun.shadow_enabled = false
+	sunlight = sun
+	sun.shadow_enabled = true
+	sun.directional_shadow_max_distance = 60
+	sun.directional_shadow_mode = DirectionalLight3D.SHADOW_PARALLEL_2_SPLITS
 	add_child(sun)
 	box(self, Vector3(0, -0.5, 55), Vector3(180, 1, 92), Color(0.19, 0.23, 0.16), true, "earth")
 	box(self, Vector3(0, -0.5, -55), Vector3(180, 1, 92), Color(0.19, 0.23, 0.16), true, "earth")
@@ -192,34 +212,26 @@ func build_world() -> void:
 			continue
 		if absf(point.x) < 3:
 			point.x += 5
-		box(self, point, Vector3(1.2, 1, 1.2), Color(0.37, 0.29, 0.19), true, "wood")
+		var crate := box(self, point, Vector3(1.2, 1, 1.2), Color(0.37, 0.29, 0.19), true, "wood")
+		crate.get_child(0).hide()
+		models.spawn("Crate", crate)
 	# Lightweight forest silhouettes; corridor remains open and readable.
 	for i in range(180):
 		var x := randf_range(-65, 65)
 		var z := randf_range(-85, 85)
 		if route_distance(Vector3(x, 0, z)) < 4 or absf(z) < 12 or absf(x) < 8 or Vector2(x + 28, z + 67).length() < 8 or Vector2(x - 14, z - 18).length() < 9:
 			continue
-		box(self, Vector3(x, 2.1, z), Vector3(0.45, 4.2, 0.45), Color(0.2, 0.17, 0.12), true, "wood")
-		var crown := MeshInstance3D.new()
-		var cone := CylinderMesh.new()
-		cone.top_radius = 0
-		cone.bottom_radius = randf_range(1.4, 2.4)
-		cone.height = randf_range(4, 7)
-		crown.mesh = cone
-		var mat := StandardMaterial3D.new()
-		mat.albedo_color = Color(0.13, 0.22, 0.18)
-		crown.material_override = mat
-		crown.position = Vector3(x, 5, z)
-		add_child(crown)
+		var trunk := box(self, Vector3(x, 2.1, z), Vector3(0.45, 4.2, 0.45), Color(0.2, 0.17, 0.12), true, "wood")
+		trunk.get_child(0).hide()
+		var tree: Node3D = models.spawn("Pine_A" if i % 2 == 0 else "Pine_B", self, Vector3(x, 0, z))
+		tree.rotation.y = float(i) * 1.37
 	train = Node3D.new()
 	add_child(train)
 	train.position = Vector3(0, 0, 74)
 	for i in range(4):
 		var wagon := box(train, Vector3(0, 1.4, i * 5.5), Vector3(2.1, 2.1, 4.7), Color(0.23, 0.26, 0.22) if i > 0 else Color(0.12, 0.15, 0.16), true, "steel")
-		for x in [-1, 1]:
-			for z in [-1.5, 1.5]:
-				box(wagon, Vector3(x, -1, z), Vector3(0.18, 0.6, 0.6), Color(0.1, 0.12, 0.12))
-	box(train, Vector3(0, 3.0, -1.5), Vector3(0.5, 1.2, 0.5), Color(0.12, 0.14, 0.15))
+		wagon.get_child(0).hide()
+		models.spawn("Locomotive" if i == 0 else "Wagon", wagon, Vector3(0, -1.4, 0))
 	marker(Vector3(-3.5, 1.3, -25), "ZUGLADUNG (OPTIONAL)", Color(0.85, 0.65, 0.2))
 	weather.build_puddles()
 	build_rain()
@@ -233,6 +245,7 @@ func build_hut(pos: Vector3, partisan: bool) -> void:
 		build_safe_hut(pos, color, front)
 	var light := OmniLight3D.new()
 	light.position = pos + Vector3(0, 2.2, -1)
+	models.spawn("Lantern", self, pos + Vector3(0.6, 2.1, -2.7 if not partisan else 2.7))
 	light.light_color = Color(1, 0.63, 0.29)
 	light.light_energy = 1.7
 	light.omni_range = 10
@@ -240,13 +253,26 @@ func build_hut(pos: Vector3, partisan: bool) -> void:
 	if partisan:
 		box(self, pos + Vector3(1, 0.8, -3.8), Vector3(0.5, 1.6, 0.4), Color(0.31, 0.24, 0.16))
 
+func panel_wall_visual(body: Node3D, width: int, angle: float) -> void:
+	body.get_child(0).hide()
+	for column in range(width):
+		for row in range(3):
+			var offset := Vector3(column - (width - 1) * 0.5, row * (3.2 / 3) + 3.2 / 6 - 1.6, 0).rotated(Vector3.UP, angle)
+			var panel: Node3D = models.spawn("WallPanel", body, offset)
+			panel.rotation.y = angle
+
 func build_safe_hut(pos: Vector3, color: Color, front: float) -> void:
-	box(self, pos + Vector3(0, 1.6, -2.5 * front), Vector3(6, 3.2, 0.2), color, true, "wood")
+	var back := box(self, pos + Vector3(0, 1.6, -2.5 * front), Vector3(6, 3.2, 0.2), color, true, "wood")
+	panel_wall_visual(back, 6, 0)
 	for x in [-3, 3]:
-		box(self, pos + Vector3(x, 1.6, 0), Vector3(0.2, 3.2, 5), color, true, "wood")
+		var side := box(self, pos + Vector3(x, 1.6, 0), Vector3(0.2, 3.2, 5), color, true, "wood")
+		panel_wall_visual(side, 5, PI / 2)
 	for x in [-2, 2]:
-		box(self, pos + Vector3(x, 1.6, 2.5 * front), Vector3(2, 3.2, 0.2), color, true, "wood")
+		var face := box(self, pos + Vector3(x, 1.6, 2.5 * front), Vector3(2, 3.2, 0.2), color, true, "wood")
+		panel_wall_visual(face, 2, 0)
 	var roof := box(self, pos + Vector3(0, 3.3, 0), Vector3(6.5, 0.3, 5.5), Color(0.2, 0.23, 0.24), true, "wood")
+	roof.get_child(0).hide()
+	models.spawn("HutRoof", roof)
 	weather.register_roof(roof, Vector2(3.25, 2.75))
 
 func marker(pos: Vector3, text: String, color: Color) -> Node3D:
@@ -535,3 +561,6 @@ func _exit_tree() -> void:
 	for child in find_children("*", "AudioStreamPlayer", true, false):
 		child.stop()
 		child.stream = null
+
+func toggle_shadows() -> void:
+	sunlight.shadow_enabled = not sunlight.shadow_enabled
