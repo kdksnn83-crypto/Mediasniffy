@@ -1,0 +1,14 @@
+{
+  "wall_tile_health": 100.0,
+  "projectile_joules_per_health": 25.0,
+  "roof_support_loss_fraction": 0.45,
+  "debris_budget": 48,
+  "debris_lifetime_seconds": 4.0,
+  "grenade_count": 2,
+  "grenade_fuse_seconds": 3.0,
+  "grenade_radius_m": 9.0,
+  "grenade_peak_damage": 220.0,
+  "blast_cover_multiplier": 0.15,
+  "wetness": 0.85,
+  "puddle_count": 18
+}

@@ -1,0 +1,63 @@
+ONE MISSION: NASSER STAHL — Prototyp 0.3
+
+SO STARTET DAS SPIEL UNTER WINDOWS
+1. ZIP vollständig entpacken (nicht direkt aus dem ZIP starten).
+2. Godot starten, im Projektmanager „Importieren“ wählen.
+3. Die Datei project.godot im entpackten Ordner OneMission auswählen.
+4. Projekt öffnen. Den ersten Import abwarten.
+5. F6 startet die Missionsszene; F5 startet das ganze Projekt.
+   Im laufenden Spiel startet F5 die Mission neu.
+
+Keine zusätzlichen Plugins, Downloads, Modelle oder Zugangsdaten nötig.
+Das ist ein Godot-Projekt, keine fertig exportierte Windows-EXE.
+Getestet mit Godot 4.6.3 (Compatibility). 4.7.2 wurde hier nicht getestet.
+
+STEUERUNG
+W A S D        Bewegen
+Maus           Blickrichtung
+Shift          Sprinten (Ausdauer)
+Strg           Ducken
+Rechte Maustaste halten   Zielen
+Linke Maustaste           Schießen
+R              Nachladen, dauert 2,6 Sekunden
+E halten       Sprengladungen, Zündung, Kennwort
+F              Trupp: Folgen / Halten
+G              Granate werfen (2 Stück, 3 Sekunden Zünder)
+Tab halten     Feldkarte (Norden oben)
+Bild auf / ab  Visierentfernung 100 bis 400 Meter
+Esc            Maus freigeben / einfangen (keine Spielpause)
+F5             Mission neu starten
+
+DEIN AUFTRAG
+An beiden orange markierten Stellen der Brücke je 3 Sekunden E halten.
+Optional: Beim haltenden Zug am markierten Punkt E halten.
+Gehe mit deinen drei Kameraden über die Brücke ans Nordufer.
+Am Zündpunkt hinter der Brücke E 2 Sekunden halten.
+Die Zündung ist gesperrt, solange ein lebender Kamerad am Südufer ist.
+Folge dem Weg nach Nordwesten zur Forsthütte. Tab hilft bei der Orientierung.
+Dort müssen die überlebenden Kameraden ankommen; dann E halten.
+Du gewinnst auch ohne Zugziel. Stirbt der Spieler, scheitert die Mission.
+Tiefes Wasser ist tödlich. Nach der Sprengung gibt es keinen Rückweg.
+
+TIPPS
+Du startest im Süden und blickst nach Norden. Links liegt der Fluchtweg.
+Der Zug hält nach etwa 28 Sekunden; Alarm verkürzt die Entladephase.
+Du kannst beim Schießen eigene Kameraden treffen. Achte auf die Schussbahn!
+Dicke Deckung stoppt Geschosse. Holzwände können durchschlagen werden.
+Streifende Treffer können von Stahl abprallen. Zielen und Ducken reduzieren die Streuung.
+Bei längeren Entfernungen Visier anpassen; Geschosse brauchen Flugzeit.
+Fehlt ein Kamerad am Zündpunkt: F auf „Folgen“ stellen und zurückblicken.
+
+Grafik, Sounds und Figuren sind einfache, selbst erzeugte Platzhalter.
+Die vollständigen technischen Hinweise stehen in docs/TECHNIK.md.
+
+NEU IN VERSION 0.3
+Die Wachhütte besitzt zerstörbare Wandkacheln. Wiederholte Gewehrtreffer
+können eine Kachel öffnen; Granaten beschädigen mehrere Kacheln.
+Nach Verlust von 45 % der tragenden Felder stürzt das Dach ein.
+Die Forsthütte der Partisanen bleibt als Missionsziel stabil.
+G wirft eine Granate nach vorne. Gehe vor der Explosion auf Abstand!
+Wände vermindern Explosionsschaden, machen dich aber nicht unverwundbar.
+Trümmer werden nach 4 Sekunden entfernt; höchstens 48 Stück gleichzeitig.
+Nasse Oberflächen, Pfützenringe und kleine Flusswellen sind ergänzt.
+Die Wasseroberfläche ist Grafik; tiefes Wasser bleibt tödlich.

@@ -1,0 +1,6 @@
+{
+  "wood": {"resistance_j_per_m": 6500.0, "ricochet_angle_deg": 82.0, "ricochet_speed_ratio": 0.25, "penetrable": true},
+  "steel": {"resistance_j_per_m": 900000.0, "ricochet_angle_deg": 65.0, "ricochet_speed_ratio": 0.4, "penetrable": true},
+  "earth": {"resistance_j_per_m": 70000.0, "ricochet_angle_deg": 90.0, "ricochet_speed_ratio": 0.0, "penetrable": false},
+  "unknown": {"resistance_j_per_m": 1000000.0, "ricochet_angle_deg": 90.0, "ricochet_speed_ratio": 0.0, "penetrable": false}
+}
